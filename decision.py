@@ -24,6 +24,18 @@ st.markdown("""
 
 
 # --- DATA LOADING ---
+
+import os
+
+@st.cache_data
+def load_data():
+    file_path = "r"C:\Users\shraddha sharma\Machine Learning\heart.csv"
+    if os.path.exists(file_path):
+        return pd.read_csv(file_path).drop_duplicates()
+    else:
+        # This will show you exactly where the app is looking on the server
+        st.error(f"File not found! Current directory is: {os.getcwd()}")
+        st.stop()
 @st.cache_data
 def load_data():
     try:
