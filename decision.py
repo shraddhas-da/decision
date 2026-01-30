@@ -182,13 +182,19 @@ with tab2:
     ax_imp.set_title("Relative Importance of All Features")
     st.pyplot(fig_imp)
 
-    # --- ADD THE NEW CODE HERE ---
     st.markdown("---")
-    st.write("### 🌳 Decision Tree Logic Flow")
-    st.info("This flowchart shows the exact 'if-then' rules the model learned from the data.")
+    st.write("### 🌳 Decision Tree Logic")
+    st.warning("Visualizing the full tree. Use the expand icon in the top right of the image to zoom in.")
+
+    # Calculate dynamic height/width based on tree size
+    tree_depth = clf.get_depth()
+    tree_width = clf.tree_.node_count
     
-    # We create a large figure to ensure the text is legible
-    fig_tree, ax_tree = plt.subplots(figsize=(25, 12))
+    # Scale figure size: more nodes = larger canvas
+    fig_width = max(25, tree_width * 0.5)
+    fig_height = max(12, tree_depth * 2)
+
+    fig_tree, ax_tree = plt.subplots(figsize=(fig_width, fig_height))
     
     plot_tree(
         clf, 
@@ -196,16 +202,11 @@ with tab2:
         class_names=class_names, 
         filled=True, 
         rounded=True, 
-        fontsize=12,
-        max_depth=3,  # Limits visual depth so it's readable
+        fontsize=10,  # Font size remains small to fit all nodes
         ax=ax_tree
     )
     
     st.pyplot(fig_tree)
-    
-    if clf.get_depth() > 3:
-        st.caption("Note: The tree is truncated to the first 3 levels for clarity. The full model depth is {}.".format(clf.get_depth()))
-
 # --- TAB 3: DIAGNOSTICS ---
 with tab3:
     st.subheader("Advanced Evaluation")
