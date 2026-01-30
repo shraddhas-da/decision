@@ -30,8 +30,6 @@ import os
 @st.cache_data
 def load_data():
     try:
-        # No "C:\Users...", just the filename!
-        # This tells the code: "Look for this file right next to me."
         df = pd.read_csv("heart.csv")
         return df.drop_duplicates()
     except FileNotFoundError:
@@ -173,6 +171,40 @@ with tab2:
     feat_imp.plot(kind='barh', color='#3498db', ax=ax_imp)
     ax_imp.set_title("Relative Importance of All Features")
     st.pyplot(fig_imp)
+
+    # ... (previous code for Tab 2: Metrics, PCA Surface, and Importance Hierarchy)
+
+    # Diagram 2: Feature Importance (Large, Bottom)
+    st.write("### 🎯 Importance Hierarchy")
+    feat_imp = pd.Series(clf.feature_importances_, index=X.columns).sort_values(ascending=True)
+    fig_imp, ax_imp = plt.subplots(figsize=(14, 8))
+    feat_imp.plot(kind='barh', color='#3498db', ax=ax_imp)
+    ax_imp.set_title("Relative Importance of All Features")
+    st.pyplot(fig_imp)
+
+    # --- ADD THE NEW CODE HERE ---
+    st.markdown("---")
+    st.write("### 🌳 Decision Tree Logic Flow")
+    st.info("This flowchart shows the exact 'if-then' rules the model learned from the data.")
+    
+    # We create a large figure to ensure the text is legible
+    fig_tree, ax_tree = plt.subplots(figsize=(25, 12))
+    
+    plot_tree(
+        clf, 
+        feature_names=X.columns.tolist(), 
+        class_names=class_names, 
+        filled=True, 
+        rounded=True, 
+        fontsize=12,
+        max_depth=3,  # Limits visual depth so it's readable
+        ax=ax_tree
+    )
+    
+    st.pyplot(fig_tree)
+    
+    if clf.get_depth() > 3:
+        st.caption("Note: The tree is truncated to the first 3 levels for clarity. The full model depth is {}.".format(clf.get_depth()))
 
 # --- TAB 3: DIAGNOSTICS ---
 with tab3:
