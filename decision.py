@@ -29,21 +29,15 @@ import os
 
 @st.cache_data
 def load_data():
-    file_path = "r"C:\Users\shraddha sharma\Machine Learning\heart.csv"
-    if os.path.exists(file_path):
-        return pd.read_csv(file_path).drop_duplicates()
-    else:
-        # This will show you exactly where the app is looking on the server
-        st.error(f"File not found! Current directory is: {os.getcwd()}")
-        st.stop()
-@st.cache_data
-def load_data():
     try:
-        # Changed to relative path for environment compatibility
-        df = pd.read_csv(r"C:\Users\shraddha sharma\Machine Learning\heart.csv")
-        return df.drop_duplicates()  # Removing duplicates for better accuracy
+        # No "C:\Users...", just the filename!
+        # This tells the code: "Look for this file right next to me."
+        df = pd.read_csv("heart.csv")
+        return df.drop_duplicates()
     except FileNotFoundError:
-        st.error("Please ensure 'heart.csv' is in the same folder as this script.")
+        st.error("⚠️ Error: 'heart.csv' was not found in the project folder.")
+        # This help message shows you exactly where the server is looking
+        st.info(f"Current working directory: {os.getcwd()}")
         st.stop()
 
 
